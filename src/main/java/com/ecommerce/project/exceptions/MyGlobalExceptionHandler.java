@@ -1,4 +1,5 @@
-package com.ecommerce.project.exception;
+package com.ecommerce.project.exceptions;
+
 
 import com.ecommerce.project.payload.APIResponse;
 import org.springframework.http.HttpStatus;
@@ -12,31 +13,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-
 public class MyGlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String,String>> myMethodArgumentNotValidException(MethodArgumentNotValidException e){
+    public ResponseEntity<Map<String, String>> myMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, String> response = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach(err -> {
-           String fieldName = ((FieldError)err).getField();
-           String message = err.getDefaultMessage();
-           response.put(fieldName,message);
+            String fieldName = ((FieldError) err).getField();
+            String message = err.getDefaultMessage();
+            response.put(fieldName, message);
         });
-        return new ResponseEntity<Map<String,String>>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Map<String, String>>(response,
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<APIResponse> myResourceNotFoundException(ResourceNotFoundException e){
+    public ResponseEntity<APIResponse> myResourceNotFoundException(ResourceNotFoundException e) {
         String message = e.getMessage();
-        APIResponse apiresponse  = new APIResponse(message, false);
-        return new ResponseEntity<>(apiresponse,HttpStatus.NOT_FOUND);
+        APIResponse apiResponse = new APIResponse(message, false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(APIException.class)
-    public ResponseEntity<APIResponse> myAPIException(APIException e){
+    public ResponseEntity<APIResponse> myAPIException(APIException e) {
         String message = e.getMessage();
-        APIResponse apiresponse  = new APIResponse(message, false);
-        return new ResponseEntity<>(apiresponse,HttpStatus.BAD_REQUEST);
+        APIResponse apiResponse = new APIResponse(message, false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
 }
